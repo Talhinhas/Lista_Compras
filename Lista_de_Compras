@@ -1,0 +1,179 @@
+ALIMENTO = 'Alimento'
+OBJETO = 'Objeto'
+PRODUTO = 'Produto'
+
+HORTICULAS = 'Horticulas'
+GORDURAS = 'Gorduras'
+CEREAIS = 'Cereais'
+PRODUTOS_ANIMAIS = 'Produtos Animais'
+LATICINIOS = 'Laticinios'
+FRUTA = 'Fruta'
+LEGUMINOSAS = 'Leguminosas'
+
+
+class alimento:
+    def __init__(self, nome, categoriaRoda):
+        self.nome = nome
+        self.categoriaRoda = categoriaRoda
+        self.categoria = ALIMENTO
+
+    def toString(self):
+        return '[' + self.categoria + ']' + ' Nome: ' + self.nome + ' Categoria da roda: ' + str(self.categoriaRoda)
+
+
+class objeto:
+    def __init__(self, nome):
+        self.nome = nome
+        self.categoria = OBJETO
+
+    def toString(self):
+        return '[' + OBJETO + ']''Nome: ' + self.nome + 'Categoria: ' + self.categoria
+
+
+class produto:
+    def __init__(self, nome):
+        self.nome = nome
+        self.categoria = PRODUTO
+
+    def toString(self):
+        return '[' + PRODUTO + ']''Nome: ' + self.nome + 'Categoria: ' + self.categoria
+
+
+class item:
+    def __init__(self, item, unidades):
+        self.item = item
+        self.unidades = unidades
+
+    def toString(self):
+        return self.item.toString() + ' Unidades: ' + str(self.unidades)
+
+
+class lista_compras:
+    def __init__(self, lista):
+        self.lista = lista
+
+    def toString(self):
+        s = ''
+        for item in self.lista:
+            s += item.toString() + '\n'
+        return s
+
+    def totalUnidades(self):
+        soma = 0
+        for item in self.lista:
+            soma += item.unidades
+        return soma
+
+    def totalPorCategoriaRoda(self):
+        totalHorticulas = 0
+        totalGorduras = 0
+        totalCereais = 0
+        totalProdutosAnimais = 0
+        totalLaticinios = 0
+        totalFruta = 0
+        totalLeguminosas = 0
+        for item in self.lista:
+            if(item.item.categoria == ALIMENTO):
+                if(item.item.categoriaRoda == HORTICULAS):
+                    totalHorticulas += item.unidades
+                elif(item.item.categoriaRoda == GORDURAS):
+                    totalGorduras += item.unidades
+                elif(item.item.categoriaRoda == CEREAIS):
+                    totalCereais += item.unidades
+                elif(item.item.categoriaRoda == PRODUTOS_ANIMAIS):
+                    totalProdutosAnimais += item.unidades
+                elif(item.item.categoriaRoda == LATICINIOS):
+                    totalLaticinios += item.unidades
+                elif(item.item.categoriaRoda == FRUTA):
+                    totalFruta += item.unidades
+                else:
+                    totalLeguminosas += item.unidades
+        return (totalHorticulas, totalGorduras, totalCereais, totalProdutosAnimais, totalLaticinios, totalFruta, totalLeguminosas)
+
+    def percentagemRoda(self):
+        totalHorticulas, totalGorduras, totalCereais, totalProdutosAnimais, totalLaticinios, totalFruta, totalLeguminosas = self.totalPorCategoriaRoda()
+        soma = totalHorticulas + totalGorduras + totalCereais + \
+            totalProdutosAnimais + totalLaticinios + totalFruta + totalLeguminosas
+        return [totalHorticulas*100/soma, totalGorduras*100/soma, totalCereais*100/soma, totalProdutosAnimais*100/soma, totalLaticinios*100/soma, totalFruta*100/soma, totalLeguminosas*100/soma]
+
+    def tasAComerBem(self):
+        listaPercentagem = self.percentagemRoda()
+        return [listaPercentagem[0]-23, listaPercentagem[1]-2, listaPercentagem[2]-28, listaPercentagem[3]-5, listaPercentagem[4]-18, listaPercentagem[5]-20, listaPercentagem[6]-4]
+
+    def adicionarCategoriaRoda(self):
+        print('1-HORTICULAS')
+        print('2-GORDURAS')
+        print('3-CEREAIS')
+        print('4-PRODUTOS_ANIMAIS')
+        print('5-LATICINIOS')
+        print('6-FRUTA')
+        print('7-LEGUMINOSAS')
+        categoria = input('Escolha a Categoria da roda: ')
+        dicionarioCategorias = {1: HORTICULAS, 2: GORDURAS, 3: CEREAIS,
+                                4: PRODUTOS_ANIMAIS, 5: LATICINIOS, 6: FRUTA, 7: LEGUMINOSAS}
+        return dicionarioCategorias.get(int(categoria), '???')
+
+    def adicionarItem(self, categoria):
+        if(categoria == ALIMENTO):
+            nomeAlimento = input('Nome do alimento: ')
+            unidades = input('Unidades: ')
+            categoriaRoda = self.adicionarCategoriaRoda()
+            self.lista.append(
+                item(alimento(nomeAlimento, categoriaRoda), int(unidades)))
+            print(self.lista)
+
+        elif(categoria == OBJETO):
+            nomeObjeto = input('Nome do objeto: ')
+            unidades = input('Unidades: ')
+            self.lista.append(
+                item(objeto(nomeObjeto, unidades), int(unidades)))
+        else:
+            nomeProduto = input('Nome do produto: ')
+            unidades = input('Unidades: ')
+            self.lista.append(
+                item(produto(nomeProduto, unidades), int(unidades)))
+
+
+# Projeto_lista_de_compras
+
+def menu():
+    lista = lista_compras([])
+    controlo1 = True
+    while controlo1 == True:
+        print('1-Adicionar item')
+        print('2-Lista de Compras')
+        print('3-Total de unidades da lista')
+        print('4-Estou a comer bem?')
+        print('5-sair')
+        opçao = int(input('Insira uma opção: '))
+        if opçao == 1:
+            controlo = True
+            while controlo == True:
+                print('1-Adicionar alimento')
+                print('2-Adicionar objeto')
+                print('3-Adicionar produto')
+                print('4-Sair')
+                opçaoMiniMenu = int(input('Insira tipo de item: '))
+                if opçaoMiniMenu == 1:
+                    lista.adicionarItem(ALIMENTO)
+                elif opçaoMiniMenu == 2:
+                    lista.adicionarItem(OBJETO)
+                elif opçaoMiniMenu == 3:
+                    lista.adicionarItem(PRODUTO)
+                elif opçaoMiniMenu == 4:
+                    controlo = False
+                else:
+                    pass
+        elif opçao == 2:
+            print(lista.toString())
+        elif opçao == 3:
+            print('O total de unidades é: ' + str(lista.totalUnidades()))
+        elif opçao == 4:
+            print(lista.tasAComerBem())
+        elif opçao == 5:
+            controlo1 = False
+        else:
+            pass
+
+
+menu()
